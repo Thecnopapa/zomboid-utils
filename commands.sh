@@ -2,28 +2,27 @@ echo "Sourcing commands.sh ..."
 
 
 zomboid-start (){
-	tmux -t 0 'echo " * Starting Zomboid server... ($1)"'
+	tmux send -t zomboid.0 'echo " * Starting Zomboid server... ($1)"' 'Enter'
     zomboid-update
     dns-update
-    cd ~/pzserver
-    ./start-server.sh "$1"
-    cd $ZOMBOID_FOLDER
-    tmux -t 0 'echo " * Server STOPPED"'
+    tmux send -t zomboid.1 'cd ~/pzserver' 'Enter'
+    tmux send -t zomboid.1 './start-server.sh "$1"' 'Enter'
 }
 
-zomboid-verify (){
-	echo " * Updating and Verifying Zomboid installation..."
-	steamcmd +force_install_dir /home/server/pzserver/ +@sSteamCmdForcePlatformType linux +login anonymous +app_update 380870 validate +quit
-	tmux -t 0 'echo " * Update finished"'
+zomboid-validate (){
+	tmux send -t zomboid.0 'echo " * Updating and Validating Zomboid installation..."' 'Enter'
+	tmux send -t zomboid.1 'steamcmd +force_install_dir /home/server/pzserver/ +@sSteamCmdForcePlatformType linux +login anonymous +app_update 380870 validate +quit' 'Enter'
+	tmux send -t zomboid.0 'echo " * Update and Validation finished"' 'Enter'
 }
 
 zomboid-update (){
-	tmux -t 0 'echo " * Updating Project Zomboid..."'
-	steamcmd +force_install_dir /home/server/pzserver/ +@sSteamCmdForcePlatformType linux +login anonymous +app_update 380870 +quit
-	tmux -t 0 'echo " * Update finished"'
+	tmux send -t zomboid.0 'echo " * Updating Project Zomboid..."' 'Enter'
+	tmux send -t zomboid.1 'steamcmd +force_install_dir /home/server/pzserver/ +@sSteamCmdForcePlatformType linux +login anonymous +app_update 380870 +quit' 'Enter'
+	tmux send -t zomboid.0 'echo " * Update finished"' 'Enter'
 }
 
 zomboid-stop (){
-	tmux -t 0 'echo " * Stopping Zomboid server"'
+	tmux send -t zomboid.0 'echo " * Stopping Zomboid server"' 'Enter'
+	tmux send -t zomboid.1 C-c 'Enter'
 }
 

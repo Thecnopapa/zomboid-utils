@@ -7,7 +7,7 @@ zomboid-console(){
 
 zomboid-tmux (){
 	echo " * Starting zomboid Tmux session"
-	tmux new-session -s zomboid -d -n server && $(tmux split-window -h -d && tmux send -t 1 "cd $ZOMBOID_FOLDER && source ./commands.sh" 'Enter') || return 1
+	tmux new-session -s zomboid -d -n server && $(tmux split-window -h -d && tmux send -t zomboid.0 "cd $ZOMBOID_FOLDER && source ./commands.sh" 'Enter') || return 1
 	echo " * Tmux session ready"
 	return 0
 }
@@ -15,12 +15,11 @@ zomboid-tmux (){
 start (){
 	echo " * Starting Project Zomboid server..."
 	check-tmux && echo " * Starting Tmux"; zomboid-tmux || echo " * Server already running"
-	check-zomboid && echo " * Starting new server"; tmux send -t 1 "zomboid-start " "$ZOMBOID_SERVER" 'Enter' || echo " * Server already running"
-
+	check-zomboid && echo " * Starting new server"; tmux send -t zomboid.0 "zomboid-start " "$ZOMBOID_SERVER" 'Enter' || echo " * Server already running"
 }
 
 stop () {
-	check-tmux && echo " * Tmux Not running" && return 0 || echo " * Stopping Server.."; tmux send -t 1 "zomboid-stop " 'Enter' 
+	check-tmux && echo " * Tmux Not running" && return 0 || echo " * Stopping Server.."; tmux send -t zomboid.0 "zomboid-stop " 'Enter' 
 	check-zomboid && echo " * Zomboid server was not running" && return 0
 	while ! check-zomboid; do
 		echo " * Waiting for server to stop..."
@@ -28,6 +27,13 @@ stop () {
 	done
 	echo " * Server STOPPED"
 	return 0
+}
+
+validate (){
+	echo " * Validating Project Zomboid server..."
+	stop
+	check-tmux && echo " * Starting Tmux"; zomboid-tmux || echo " * Server already running"
+	check-zomboid && echo " * Starting new server"; tmux send -t zomboid.0 "zomboid-validate " "$ZOMBOID_SERVER" 'Enter' || echo " * Server already running"
 }
 
 restart (){
