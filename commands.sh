@@ -2,11 +2,12 @@ echo "Sourcing commands.sh ..."
 
 
 zomboid-start (){
-	tmux send -t zomboid.0 'echo " * Starting Zomboid server... ($1)"' 'Enter'
+	tmux send -t zomboid.0 "echo \" * Starting Zomboid server... ($1)\"" 'Enter'
     zomboid-update
     dns-update
     tmux send -t zomboid.1 'cd ~/pzserver' 'Enter'
-    tmux send -t zomboid.1 './start-server.sh "$1"' 'Enter'
+    echo "./start-server.sh -servername \"$1\""
+    tmux send -t zomboid.1 "./start-server.sh -servername \"$1\"" 'Enter'
 }
 
 zomboid-validate (){
