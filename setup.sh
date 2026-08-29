@@ -64,5 +64,10 @@ check-tmux (){
 	fi
 }
 
+zomboid-dashboard (){
+	cd "${ZOMBOID_FOLDER}/dashboard"
+	python ./main.py "$@"
+}
+
 
 
