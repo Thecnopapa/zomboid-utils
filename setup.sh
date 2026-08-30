@@ -34,6 +34,7 @@ validate (){
 	stop
 	check-tmux && echo " * Starting Tmux"; zomboid-tmux || echo " * Server already running"
 	check-zomboid && echo " * Starting new server"; tmux send -t zomboid.0 "zomboid-validate " "$ZOMBOID_SERVER" 'Enter' || echo " * Server already running"
+	start
 }
 
 restart (){
@@ -64,10 +65,13 @@ check-tmux (){
 	fi
 }
 
-zomboid-dashboard (){
+zomboid-dashboard-debug (){
 	cd "${ZOMBOID_FOLDER}/dashboard"
-	python ./main.py "$@"
+	python ./main.py --debug
 }
 
+zomboid-dashboard (){
+	gunicorn main:app --certfile certificates/cert.pem --keyfile .secrets/key.pem -b 0.0.0.0:8080
+}
 
 
