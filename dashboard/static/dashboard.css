@@ -1,36 +1,51 @@
 
 
+
 body{
     width: 100%;
     max-width: 100%;
     height: 100%;
     max-height: 100%;
-    box-sizing: border-box;
     padding:0;
     margin:0;
     overflow: hidden;
+    background-color: lightgrey;
 }
 
-h1{
+h1, h2, h3, h4, h5, h6, p{
     width: fit-content;
 }
+
+
 
 .panels {
     height: 80%;
     max-height: 80%;
     width: 100%;
     overflow-y: scroll;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    scrollbar-width: thin;
+    scrollbar-gutter: stable both-edges;
 }
 .panel{
+    box-sizing: border-box;
     background-color: lightblue;
-    width:100%;
-    height: 100%;
-    border: 20px;
+    width:50%;
+    height: 80%;
+    border: 10px solid lightgrey;
+}
+.panel > h2 {
+    width: 100%;
+    text-align: center;
+
 }
 
 
 
 .wide-panel{
+    width: 100%;
     height: 20%;
     background-color: cyan;
     display: flex;
