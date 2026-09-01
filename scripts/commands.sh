@@ -8,7 +8,10 @@ zomboid-console(){
 
 zomboid-tmux (){
 	echo " * Starting zomboid Tmux session"
-	tmux new-session -s zomboid -d -n server && $(tmux split-window -h -d && tmux send -t zomboid.0 "cd $ZOMBOID_FOLDER && source ./commands.sh" 'Enter') || return 1
+	tmux new-session -s zomboid -d -n server \
+	&& $(tmux split-window -h -d && \
+	tmux send -t zomboid.0 "cd $ZOMBOID_FOLDER && source ~/server/server-commands.sh" 'Enter' && \
+	tmux send -t zomboid.1 "cd $PZ_INSTALLATION" 'Enter') || return 1
 	echo " * Tmux session ready"
 	return 0
 }
@@ -72,17 +75,18 @@ check-tmux (){
 }
 
 zomboid-dashboard-debug (){
-	cd "${ZOMBOID_FOLDER}/dashboard"T
+	cd "~/dashboard"
 	python ./main.py --debug
 }
 
 zomboid-dashboard (){
-	gunicorn main:app --certfile certificates/cert.pem --keyfile .secrets/key.pem -b 0.0.0.0:8080
+	cd ~/dashboard
+	gunicorn main:app --certfile ./certificates/cert.pem --keyfile ~/.secrets/key.pem -b 0.0.0.0:8080
 }
 
 dns-update(){
 	echo " * Updating DNS Records..."
-	python3 ./scripts/update-dns.py -u
+	python ~/scripts/update-dns.py -u
 }
 
 

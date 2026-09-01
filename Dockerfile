@@ -1,6 +1,6 @@
 FROM debian:trixie-slim
 
-SHELL ["/bin/bash", "--rcfile", "~/.bashrc", "-c" ]
+SHELL ["/bin/bash", "--rcfile", "~/.bashrc", "-ci" ]
 
 RUN apt-get update -y
 RUN apt-get install curl vim tmux -y
@@ -28,8 +28,8 @@ RUN ln -s /usr/games/steamcmd /usr/bin/steamcmd
 #RUN apt-get install -y 
 
 # Clean cache
+RUN apt-get autoremove -y
 RUN apt-get clean -y
-
 
 RUN useradd --shell /bin/bash zombie
 USER zombie
@@ -55,34 +55,32 @@ RUN conda create -n zomboid
 RUN touch ~/.bashrc
 RUN conda init
 RUN conda config --set auto_activate_base true
-RUN echo "conda activate zomboid" >> ./.bashrc
-RUN source ~/.bashrc
+
 
 
 COPY ./requirements.conda.txt ./requirements.conda.txt
 COPY ./requirements.txt ./requirements.txt
-RUN conda install -f ./requirements.conda.txt -n zomboid
+RUN conda install -f ./requirements.conda.txt
 RUN conda activate zomboid
 RUN pip install -r ./requirements.txt
 
 
-#COPY ./dashboard ./dashboard
-#COPY ./server ./server
-#COPY ./scripts ./scripts
-#COPY ./server ./server
-#COPY ./setup.sh ./setup.sh
+RUN echo "export PATH=$PATH:/usr/games" >> ./.bashrc
+RUN echo "export PZ_INSTALLATION=~/projectZomboid" >> ./.bashrc
+RUN echo "export ZOMBOID_FOLDER=$HOME" >> ./.bashrc
 
-
-
-#RUN export SERVER_STATUS=0
-#RUN export PATH=$PATH:/games
-#RUN source ./setup.sh
+RUN steamcmd +force_install_dir $PZ_INSTALLATION +@sSteamCmdForcePlatformType linux +login anonymous +app_update 380870 validate +quit
 
 
 
 
+COPY ./dashboard ./dashboard
+COPY ./server ./server
+COPY ./scripts ./scripts
+COPY ./server ./server
+COPY ./setup.sh ./setup.sh
 
 
 
 
-CMD ["bash"]
+CMD ["bash", "-ic" "source ./setup.sh"]

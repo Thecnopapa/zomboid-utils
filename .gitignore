@@ -1,2 +1,7 @@
-*__pycache__
-*secrets
+__pycache__
+
+!.secrets/
+.secrets/*
+
+!.secrets/README
+

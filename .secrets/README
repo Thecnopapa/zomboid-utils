@@ -1,0 +1,18 @@
+This should contain the following files:
+
+> vars.txt, with the following values:
+    export FLASK_KEY=
+    export DASHBOARD_PASSWORD=
+
+    export DNS_TOKEN=
+    export DNS_LOGIN=
+    export DNS_DOMAIN=
+    export DNS_SUBDOMAIN=
+    export DNS_URL=
+
+    export ZOMBOID_SERVER="servertest"
+
+> key.pem, with the secret key for the https certificate
+
+
+
