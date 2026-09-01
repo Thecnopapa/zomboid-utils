@@ -52,27 +52,30 @@ RUN ~/miniconda3/bin/conda init
 WORKDIR /home/zombie
 # Conda environment
 RUN conda create -n zomboid
+RUN touch ~/.bashrc
 RUN conda init
+RUN conda config --set auto_activate_base true
 RUN echo "conda activate zomboid" >> ./.bashrc
 RUN exec bash
-RUN conda init && conda activate zomboid
+#RUN conda activate zomboid
+
 COPY ./requirements.conda.txt ./requirements.conda.txt
 COPY ./requirements.txt ./requirements.txt
 RUN conda install -f ./requirements.conda.txt
 RUN pip install -r ./requirements.txt
 
 
-COPY ./dashboard ./dashboard
-COPY ./server ./server
-COPY ./scripts ./scripts
-COPY ./server ./server
-COPY ./setup.sh ./setup.sh
+#COPY ./dashboard ./dashboard
+#COPY ./server ./server
+#COPY ./scripts ./scripts
+#COPY ./server ./server
+#COPY ./setup.sh ./setup.sh
 
 
 
-RUN export SERVER_STATUS=0
-RUN export PATH=$PATH:/games
-RUN source ./setup.sh
+#RUN export SERVER_STATUS=0
+#RUN export PATH=$PATH:/games
+#RUN source ./setup.sh
 
 
 
