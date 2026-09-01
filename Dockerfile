@@ -25,7 +25,7 @@ RUN ln -s /usr/games/steamcmd /usr/bin/steamcmd
 
 
 # Install packages
-#RUN apt-get install -y 
+RUN apt-get install -y procps
 
 # Clean cache
 RUN apt-get autoremove -y
@@ -55,21 +55,25 @@ RUN conda create -n zomboid
 RUN touch ~/.bashrc
 RUN conda init
 RUN conda config --set auto_activate_base true
-
+RUN echo "conda activate zomboid" >> ./.bashrc
 
 
 COPY ./requirements.conda.txt ./requirements.conda.txt
 COPY ./requirements.txt ./requirements.txt
 RUN conda install -f ./requirements.conda.txt
-RUN conda activate zomboid
 RUN pip install -r ./requirements.txt
 
 
+
 RUN echo "export PATH=$PATH:/usr/games" >> ./.bashrc
-RUN echo "export PZ_INSTALLATION=~/projectZomboid" >> ./.bashrc
+RUN echo "export PZ_INSTALLATION=~/pzserver" >> ./.bashrc
 RUN echo "export ZOMBOID_FOLDER=$HOME" >> ./.bashrc
 
-RUN steamcmd +force_install_dir $PZ_INSTALLATION +@sSteamCmdForcePlatformType linux +login anonymous +app_update 380870 validate +quit
+#RUN --mount=type=bind,source=/usr/games,target=/usr/games
+#RUN makedirs ~/pzserver
+#RUN --mount=type=bind,source=../server/pzserver/,target=~/pzserver
+
+#RUN steamcmd +force_install_dir ~/pzserver +@sSteamCmdForcePlatformType linux +login anonymous +app_update 380870 validate +quit
 
 
 
@@ -82,5 +86,4 @@ COPY ./setup.sh ./setup.sh
 
 
 
-
-CMD ["bash", "-ic" "source ./setup.sh"]
+CMD ["./setup.sh", "--source"]

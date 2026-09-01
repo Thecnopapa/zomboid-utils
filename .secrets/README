@@ -1,6 +1,6 @@
 This should contain the following files:
 
-> vars.txt, with the following values:
+> vars.sh, with the following values:
     export FLASK_KEY=
     export DASHBOARD_PASSWORD=
 
@@ -10,7 +10,7 @@ This should contain the following files:
     export DNS_SUBDOMAIN=
     export DNS_URL=
 
-    export ZOMBOID_SERVER="servertest"
+    export ZOMBOID_SERVER="servertest" # For example
 
 > key.pem, with the secret key for the https certificate
 
