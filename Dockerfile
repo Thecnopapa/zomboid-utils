@@ -56,12 +56,13 @@ RUN touch ~/.bashrc
 RUN conda init
 RUN conda config --set auto_activate_base true
 RUN echo "conda activate zomboid" >> ./.bashrc
-RUN exec bash
-#RUN conda activate zomboid
+RUN source ~/.bashrc
+
 
 COPY ./requirements.conda.txt ./requirements.conda.txt
 COPY ./requirements.txt ./requirements.txt
-RUN conda install -f ./requirements.conda.txt
+RUN conda install -f ./requirements.conda.txt -n zomboid
+RUN conda activate zomboid
 RUN pip install -r ./requirements.txt
 
 
