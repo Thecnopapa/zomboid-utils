@@ -117,7 +117,7 @@ def login_page():
 def run_command(command):
     try:
         print("$", command)
-        subprocess.run(f"source $ZOMBOID_FOLDER/setup.sh && {command}", shell=True, check=True, env=os.environ, executable='/bin/bash')
+        subprocess.run(f"source $ZOMBOID_FOLDER/setup.sh && ({command} &)", shell=True, check=True, env=os.environ, executable='/bin/bash')
         return True
     except Exception as e:
         print(e)
@@ -165,7 +165,14 @@ def check_auth(user=None, password=None):
 
 
 
-
+@app.route("/.well-known/acme-challenge/GvVhO8NN5wueX9CeYZqcc5lQk5cPIuNM9pufWDRvfT4")
+def cert_validation():
+    print("validation")
+    return "GvVhO8NN5wueX9CeYZqcc5lQk5cPIuNM9pufWDRvfT4.FF_IxvzOvME6_h4DWWE1yTt64W251S4xHZznxQmWi_A", 200
+    with open(os.path.join("static", "certificate.punchsalad.cert")) as cert:
+        print(cert.read())
+        return cert.read()
+    #return send_from_directory("static", "certificate.punchsalad.cert")
 
 
 if __name__ == "__main__":

@@ -124,12 +124,12 @@ zomboid-dashboard-debug (){
 
 zomboid-dashboard (){
 	cd $ZOMBOID_FOLDER/dashboard
-	gunicorn main:app --certfile ./certificates/cert.pem --keyfile ~/.secrets/key.pem -b 0.0.0.0:8080
+	gunicorn main:app --certfile ./certificates/cert.pem --keyfile $SECRETS_PATH/key.pem -b 0.0.0.0:8080
 }
 
 dns-update(){
 	echo " * Updating DNS Records..."
-	python ~/scripts/update-dns.py -u
+	python $ZOMBOID_FOLDER/scripts/update-dns.py -u
 }
 
 
