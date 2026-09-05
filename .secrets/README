@@ -2,16 +2,22 @@ This should contain the following files:
 
 > vars.sh, with the following values:
     export FLASK_KEY=
+    export DASHBOARD_LOGIN=
     export DASHBOARD_PASSWORD=
-
+    
+    # For the DNS update (I use Andy's) used in dns-update.py
     export DNS_TOKEN=
     export DNS_LOGIN=
     export DNS_DOMAIN=
     export DNS_SUBDOMAIN=
     export DNS_URL=
 
-    export ZOMBOID_SERVER="servertest" # For example
+>server-name.sh, with the following line
+    export ZOMBOID_SERVER="servertest" # Or whatever name your .ini file is named
 
+>status, (literally just that) will be created automatically, and tracks the current server status, used by server-dashboard communication.
+
+# Dashboard SSL stuff
 > key.pem, with the secret key for the https certificate
 
 
