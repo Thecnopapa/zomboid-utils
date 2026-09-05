@@ -133,15 +133,5 @@ dns-update(){
 }
 
 
-build (){
-	sudo docker build . -t zomboid-server "$@"
-}
-
-run (){
-	cd $ZOMBOID_FOLDER
-	sudo docker run -it -v ~/Zomboid:/home/zombie/Zomboid -v ~/pzserver:/home/zombie/pzserver -v ./.secrets:/home/zombie/.secrets zomboid-server -p 16261:16261 -p 16262:16262
-}
-
-
 check-zomboid
 update-status $?
