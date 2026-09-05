@@ -1,0 +1,18 @@
+
+
+<meta name="viewport" content="width=50 height=100, initial-scale=1.0"/>
+<script defer type="text/javascript" src="/static/dashboard.js"></script>
+<link href='/static/login.css' rel='stylesheet'>
+
+<body>
+    <form id="login-form" action="/api/login", method="POST">
+        User
+        <input id="user-input" type="text" value="" name="user" required/>
+        <br>
+        Password
+        <input id="password-input" type="password" value="" name="password" required/>
+        <button id="send-login" type="submit">Log In</button><br>
+    </form>
+    <br>
+    <button onclick="window.location.href='/'">Go Back</button><br>
+</body>

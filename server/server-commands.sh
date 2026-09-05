@@ -22,7 +22,7 @@ zomboid-update (){
 }
 
 zomboid-stop (){
-	tmux send -t zomboid.0 'echo " * Stopping Zomboid server"' 'Enter' 
+	echo " * Stopping Zomboid server"
 	echo $(pgrep "ProjectZomboid")
 	if [[ -n $(pgrep "ProjectZomboid") ]]; then
 		echo "Sending SIGINT"

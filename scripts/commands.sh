@@ -19,28 +19,60 @@ zomboid-tmux (){
 	return 0
 }
 
+update-vars(){
+	check-tmux && echo " * Tmux not running" || tmux send -t zomboid.0 "source ./setup.sh" 'Enter' 
+}
+change-server(){
+	if [[ $# -eq 1 ]]; then
+		echo "export ZOMBOID_SERVER=\"$1\"" > $SECRETS_PATH/server-name.sh
+		source $ZOMBOID_FOLDER/setup.sh
+		update-vars
+		return 0
+	else
+		echo " * Missing server name"
+		return 1
+	fi
+}
+update-status(){
+	if [[ $# -eq 1 ]]; then
+		echo $1 > $SECRETS_PATH/status
+		echo " * Status set to $1"
+	else
+		echo " * New status not provided"
+	fi
+
+}
+
 start (){
 	echo " * Starting Project Zomboid server..."
-	export SERVER_STATUS=2
-	check-tmux && echo " * Starting Tmux"; zomboid-tmux || echo " * Server already running"
-	check-zomboid && echo " * Starting new server" && tmux send -t zomboid.0 "zomboid-start " "$ZOMBOID_SERVER" 'Enter' || echo " * Server already running"
+	update-status 2
+	check-tmux && echo " * Starting Tmux"; zomboid-tmux || echo " * Termux ready"
+	check-zomboid && echo " * Starting new server" && tmux send -t zomboid.0 "zomboid-start " "$ZOMBOID_SERVER" 'Enter' || echo " * Server already running ($?)"
 	check-zomboid
-	export SERVER_STATUS=$?
+	status=$?
+	echo "status=$?"
+	while [ $status -ne 1 ] ; do
+		echo " * Waiting for server to start... ($status)"
+		sleep 1
+		check-zomboid
+		status=$?
+	done
+	check-zomboid
+	update-status $?
 }
 
 stop () {
-	echo "bbb"
-
+	update-status 3
 	check-tmux && echo " * Tmux Not running ($?)" && return 0 || echo " * Stopping Server.." && tmux send -t zomboid.0 "zomboid-stop" 'Enter'
-	echo "aaaa"
-	check-zomboid && echo " * Zomboid server was not running" && return 0
+	
+	check-zomboid && echo " * Zomboid server was not running"
 	while ! check-zomboid; do
 		echo " * Waiting for server to stop..."
 		sleep 1
 	done
 	echo " * Server STOPPED"
 	check-zomboid
-	export SERVER_STATUS=$?
+	update-status $?
 	return 0
 }
 
@@ -60,12 +92,18 @@ restart (){
 check-zomboid (){
 	echo " * Checking for running Zomboid server..."
 	#echo $(pgrep "ProjectZomboid")
-	if [[ -z $(pgrep "ProjectZomboid") ]]; then
+	pid="$(pgrep "ProjectZomboid")"
+	if [[ -z "$pid" ]]; then
 		echo " * Server NOT running"
 		return 0
 	else 
-		echo " * Server IS running"
-		return 1
+		if [[ -z $(ps -T -p $pid | grep "UdpEngine") ]]; then
+			echo " * Server is STARTING ($pid/$(ps -T -p $pid | grep 'UdpEngine'))"
+			return 2
+		else
+			echo " * Server IS running ($pid/$(ps -T -p $pid | grep 'UdpEngine'))"
+			return 1
+		fi
 	fi 
 }
 
@@ -80,12 +118,12 @@ check-tmux (){
 }
 
 zomboid-dashboard-debug (){
-	cd "~/dashboard"
+	cd "$ZOMBOID_FOLDER/dashboard"
 	python ./main.py --debug
 }
 
 zomboid-dashboard (){
-	cd ~/dashboard
+	cd $ZOMBOID_FOLDER/dashboard
 	gunicorn main:app --certfile ./certificates/cert.pem --keyfile ~/.secrets/key.pem -b 0.0.0.0:8080
 }
 
@@ -105,6 +143,5 @@ run (){
 }
 
 
-
 check-zomboid
-export SERVER_STATUS=$?
+update-status $?

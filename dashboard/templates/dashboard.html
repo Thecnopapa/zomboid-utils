@@ -3,6 +3,15 @@
 	<script defer type="text/javascript" src="/static/dashboard.js"></script>
     <link href='/static/dashboard.css' rel='stylesheet'>
 
+    {% if info.status_int > 1 %}
+    <script>
+    	setTimeout(function(){
+		   window.location.reload();
+		}, 1000);
+	</script>
+	{% endif %}
+
+
 	<body>
 
 		<div id="main-info" class="panel wide-panel">
@@ -10,17 +19,45 @@
 			<a href="https://zomboid.thecnopapa.com"=>zomboid.thecnopapa.com</a>
 
 		</div>
+
+		<div id=user-info>
+		{% if info.user != None %}
+		Logged in as {{ info.user }}
+		<button id=go-to-login onclick="window.location.href='/logout'")>Log Out</button>
+		{% else %}
+		Not logged in
+		<button id=go-to-login onclick="window.location.href='/login'")>Log In</button>
+		{% endif %}
+		</div>
 		<div class="panels">
 			<div id="server-info" class="panel">
 				<h2>Server</h2>
-				<h3>Status: <span class="server-status">STOPPED</span></h3>
-				<h4>Version: <span class="server-version">42.20</span></h4>
-				<button id=server-start onclick="serverStart()">Start</button>
-				<button id=server-restart onclick="serverRestart()">Restart</button>
+				<h3>Status: <span class="server-status">{{ info.status }} ({{ info.status_int }})</span></h3>
+				<button id="refresh-status" onclick="window.location.reload()">Refresh</button>
+				<h4>Name: {{ info.server_name }}</h4>
+				<h4>Version: <span class="server-version"> {{ info.version }}</span></h4>
+				{% if info.status == "stopped" %}
+					<button id=server-start onclick="serverStart()">Start</button>
+				{% endif %}
+				{% if info.admin %}
+					<button id=server-restart onclick="serverRestart()">Restart</button>
+					<button id=server-restart onclick="serverUnstuck()">Unstuck</button>
+					{% if info.status == "stopped" %}
+						<select id="server-select">
+							{% for name in info.servers %}
+							<option value="{{ name }}" {{ "selected" if name == info.server_name }}>{{ name }}</option>
+							{% endfor %}
+							}
+						</select>
+						<button id="change-server" onclick="serverChange()">Change Server</button>
+					{% else %}
+						<button id=server-stop onclick="serverStop()">Stop</button>
+					{% endif %}
+				{% endif %}
 
 			</div>
 			<div id="player-info" class="panel">
-				<h2>Players</h2>
+				<h2>Players WIP</h2>
 				<h3>Total players: <span class="player-number">5</span></h3>
 				<h3>Online players: <span class="player-number">0/16</span></h3>
 				<h3>Player ranking (latest save)</h3>
@@ -30,11 +67,11 @@
 				
 			</div>
 			<div id="mods-info" class="panel">
-				<h2>Mods</h2>
+				<h2>Mods WIP</h2>
 				
 			</div>
 			<div id="map-info" class="panel">
-				<h2>Map</h2>
+				<h2>Map WIP</h2>
 				
 			</div>
 		</div>

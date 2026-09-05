@@ -17,7 +17,16 @@ h1, h2, h3, h4, h5, h6, p{
 }
 
 
-
+#user-info{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+#go-to-login{
+    margin-left: 2em;
+}
 .panels {
     height: 80%;
     max-height: 80%;
