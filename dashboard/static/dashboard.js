@@ -1,12 +1,35 @@
     
+let PROCESSING_REQUEST=false
 
-    async function requestRestart(serverName){
-        let passwordInput = document.querySelector("#password-input");
-        let resp = await fetch("/restart/"+serverName,  {
-            method:"POST",
-            headers:{
-                "Authentication": passwordInput.value,
-            }
-        });
-        console.log(resp);
+async function serverStart(){
+    serverCommand("start")
+}
+
+async function serverRestart(){
+    serverCommand("restart")
+}
+
+async function serverStop(){
+    serverCommand("stop")
+}
+async function serverUnstuck(){
+    serverCommand("unstuck")
+}
+
+async function serverCommand(command){
+    if (PROCESSING_REQUEST){
+        return
     }
+    PROCESSING_REQUEST=true
+    let resp = await fetch("api/server/"+command, {
+        method:"POST",
+    });
+    console.log(resp);
+    if (resp.ok){
+        setTimeout(function(){
+           window.location.reload();
+        }, 3000);
+    } else {
+        PROCESSING_REQUEST=false
+    }
+}
